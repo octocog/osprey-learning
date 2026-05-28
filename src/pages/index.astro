@@ -11,8 +11,9 @@ const SITE_DESC =
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(`${base}og.png`, Astro.site);
 
-// Placeholder — replace with the family's real contact details.
-const CONTACT_EMAIL = 'hello@ospreylearning.com';
+// Consultation form delivers to this address via FormSubmit (needs one-time activation).
+const CONTACT_EMAIL = 'nell@ospreylearning.com';
+const siteRoot = new URL(base, Astro.site).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -315,10 +316,56 @@ const CONTACT_EMAIL = 'hello@ospreylearning.com';
             Contact us today to schedule a free consultation and discover how we can support your
             child's journey to academic success.
           </p>
-          <div class="contact__cta" data-reveal data-delay="2">
-            <a class="btn btn--primary" href={`mailto:${CONTACT_EMAIL}?subject=Free%20consultation%20request`}>Request your free consultation</a>
-            <a class="btn btn--ghost" href="#services">See how we help</a>
+          <form class="cform" id="cform" action={`https://formsubmit.co/${CONTACT_EMAIL}`} method="POST" data-reveal data-delay="2">
+            <input type="hidden" name="_subject" value="New consultation request — Osprey Learning Group" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_next" value={siteRoot} />
+            <!-- honeypot: bots fill this, humans don't -->
+            <input type="text" name="_honey" class="cform__honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <div class="cform__row">
+              <label class="field">
+                <span>Your name</span>
+                <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+              </label>
+            </div>
+            <div class="cform__row">
+              <label class="field">
+                <span>Phone <i>(optional)</i></span>
+                <input type="tel" name="phone" autocomplete="tel" placeholder="(555) 555-5555" />
+              </label>
+              <label class="field">
+                <span>Child's grade <i>(optional)</i></span>
+                <select name="grade">
+                  <option value="">Select…</option>
+                  <option>Pre-K / Kindergarten</option>
+                  <option>1st grade</option>
+                  <option>2nd grade</option>
+                  <option>3rd grade</option>
+                  <option>4th grade</option>
+                  <option>Other</option>
+                </select>
+              </label>
+            </div>
+            <label class="field">
+              <span>How can we help?</span>
+              <textarea name="message" rows="4" required placeholder="Tell us a little about your child and what you're hoping to work on…"></textarea>
+            </label>
+            <button class="btn btn--primary" type="submit" id="cform-submit">Request free consultation</button>
+            <p class="cform__note">We'll reply within 1–2 business days. No obligation, ever.</p>
+            <p class="cform__error" id="cform-error" hidden role="alert"></p>
+          </form>
+
+          <div class="cform__success" id="cform-success" hidden>
+            <h3>Thank you!</h3>
+            <p>Your message is on its way. We'll be in touch within 1–2 business days to schedule your free consultation.</p>
           </div>
+
           <div class="contact__meta" data-reveal data-delay="2">
             <span><i class="dot"></i> Free initial consultation</span>
             <span><i class="dot"></i> One-on-one &amp; small group</span>
@@ -353,6 +400,43 @@ const CONTACT_EMAIL = 'hello@ospreylearning.com';
         items.forEach((el) => io.observe(el));
       } else {
         items.forEach((el) => el.classList.add('is-visible'));
+      }
+
+      // Contact form — submit via FormSubmit AJAX so the visitor stays on the page
+      const cform = document.getElementById('cform') as HTMLFormElement | null;
+      if (cform) {
+        const email = (cform.getAttribute('action') || '').replace('https://formsubmit.co/', '');
+        const ajax = 'https://formsubmit.co/ajax/' + email;
+        const btn = document.getElementById('cform-submit') as HTMLButtonElement;
+        const errEl = document.getElementById('cform-error')!;
+        const success = document.getElementById('cform-success')!;
+
+        cform.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if ((cform.querySelector('[name="_honey"]') as HTMLInputElement)?.value) return; // bot
+          errEl.hidden = true;
+          const label = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = 'Sending…';
+          try {
+            const data = Object.fromEntries(new FormData(cform).entries());
+            const res = await fetch(ajax, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(data),
+            });
+            if (!res.ok) throw new Error('Request failed');
+            cform.hidden = true;
+            success.hidden = false;
+            success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (err) {
+            btn.disabled = false;
+            btn.textContent = label;
+            errEl.hidden = false;
+            errEl.textContent =
+              'Sorry — something went wrong sending your message. Please email us directly at ' + email + '.';
+          }
+        });
       }
     </script>
   </body>
