@@ -264,11 +264,7 @@ const siteRoot = new URL(base, Astro.site).href;
       <section class="founder section-pad" id="founder">
         <div class="container founder__grid">
           <div class="portrait" data-reveal>
-            <div class="portrait__ph">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1l1-1.5h7l1 1.5h1A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5Z"/><circle cx="12" cy="12" r="3.2"/></svg>
-              <div class="t">Photo coming soon</div>
-              <div class="s">Nell Donato, Founder</div>
-            </div>
+            <img src={img('nell.jpg')} width="900" height="1125" alt="Nell Donato, founder of Osprey Learning Group" />
           </div>
           <div class="founder__bio">
             <p class="eyebrow" data-reveal>Meet the Founder</p>

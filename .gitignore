@@ -5,3 +5,6 @@ dist/
 .env
 .env.local
 *.log
+
+# original headshot source (processed into public/images/nell.jpg)
+IMG_9602.PNG
