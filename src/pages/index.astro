@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Logo from '../components/Logo.astro';
 
 const base = import.meta.env.BASE_URL;
 const img = (name: string) => `${base}images/${name}`;
@@ -48,7 +49,7 @@ const CONTACT_EMAIL = 'hello@ospreylearning.com';
 
     <header class="nav">
       <div class="nav__inner">
-        <a class="brand" href="#top"><span class="mark">O</span> Osprey Learning Group</a>
+        <a class="brand" href="#top"><span class="mark"><Logo /></span> Osprey Learning Group</a>
         <nav aria-label="Primary">
           <ul class="nav__links">
             <li><a href="#services">Services</a></li>
@@ -329,7 +330,7 @@ const CONTACT_EMAIL = 'hello@ospreylearning.com';
 
     <footer class="footer">
       <div class="container footer__inner">
-        <a class="brand" href="#top"><span class="mark">O</span> Osprey Learning Group</a>
+        <a class="brand" href="#top"><span class="mark"><Logo /></span> Osprey Learning Group</a>
         <ul class="footer__nav">
           <li><a href="#services">Services</a></li>
           <li><a href="#approach">Our Approach</a></li>

@@ -1,0 +1,19 @@
+---
+// Osprey Learning Group emblem — a soaring osprey over a sunlit sea.
+// Pure vector; inherits size from its container (.brand .mark).
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+<svg class={className} viewBox="0 0 200 200" role="img" aria-label="Osprey Learning Group" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="96" fill="#0e424c"></circle>
+  <circle cx="100" cy="100" r="96" fill="none" stroke="#d09a4c" stroke-width="3.5"></circle>
+  <circle cx="100" cy="140" r="24" fill="#d09a4c"></circle>
+  <g stroke="#fbf8f1" fill="none" stroke-linecap="round">
+    <path d="M40,150 Q58,141 76,150 Q94,159 112,150 Q130,141 148,150 Q158,155 162,152" stroke-width="4.5"></path>
+    <path d="M50,164 Q68,156 86,164 Q104,172 122,164 Q138,157 152,164" stroke-width="3.5" opacity="0.7"></path>
+  </g>
+  <g fill="#fbf8f1">
+    <path d="M24,86 Q48,62 64,64 Q86,66 100,80 Q114,66 136,64 Q152,62 176,86 Q150,76 138,76 Q120,78 108,88 L106,104 Q100,110 94,104 L92,88 Q80,78 62,76 Q50,76 24,86 Z"></path>
+    <circle cx="100" cy="73" r="5.5"></circle>
+  </g>
+</svg>
